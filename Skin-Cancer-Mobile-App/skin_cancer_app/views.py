@@ -1,26 +1,50 @@
-from django.shortcuts import render, redirect
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.views import View
 from .models import SkinImage
 import json
+from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import permission_classes
 from django.contrib.auth.models import User
+import numpy as np
+import os
+import tensorflow as tf
 
 
 @csrf_exempt
+@permission_classes([IsAuthenticated])
 def testSkinCancer(request):
+
+    model = tf.keras.models.load_model(
+        os.getcwd()+r'\media\skin_cancer_model2.keras', safe_mode=False)
+
     if not request.FILES:
         return HttpResponseBadRequest(json.dumps({'error': 'No image uploaded'}))
 
-    # Access the uploaded image directly
     uploaded_image = request.FILES['image']
     username = request.POST['username']
     user = User.objects.get(username=username)
-    # Save the image to the database
+
     image_model = SkinImage.objects.create(user=user, image=uploaded_image)
 
-    # You can perform additional processing here (e.g., resize, convert format)
+    img_path = r'images\{0}'.format(uploaded_image)
 
-    # Optionally, return a response to the client
-    response_data = {'message': 'Image uploaded successfully'}
+    img = tf.keras.image.load_img(
+        r'media\{0}'.format(img_path), target_size=(160, 160))
+
+    img_array = tf.keras.image.img_to_array(img)
+    img_array_expanded_dims = np.expand_dims(img_array, axis=0)
+    preprocessed_image = tf.keras.applications.mobilenet.preprocess_input(
+        img_array_expanded_dims
+    )
+    predictions = model.predict(preprocessed_image)
+    predictions = predictions.tolist()
+    pre = predictions[0][0]-0.1
+
+    result = ""
+    if pre > 0.5:
+        result = "Malignant"
+    else:
+        result = "Benign"
+    response_data = {"Classification Result": "result",
+                     'Prediction': "None"}
     return JsonResponse(response_data)
