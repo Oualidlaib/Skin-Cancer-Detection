@@ -7,6 +7,8 @@ name = "pypi"
 djangorestframework = "*"
 mysqlclient = "*"
 pillow = "*"
+djangorestframework-simplejwt = "*"
+tensorflow = "*"
 
 [dev-packages]
 
