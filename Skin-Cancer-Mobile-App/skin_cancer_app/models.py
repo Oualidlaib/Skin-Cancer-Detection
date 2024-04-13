@@ -28,8 +28,6 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
-    def get_profile_image_filepath(self, filename):
-        return f"profile_images/{self.pk}/profile_img.png"
 
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
@@ -50,9 +48,6 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-    def get_profile_image(self):
-        return str(self.profile_image[self.profile_image.index(f'profile_images/{self.pk}/'):])
 
 
 def user_directory_path(instance, filename):

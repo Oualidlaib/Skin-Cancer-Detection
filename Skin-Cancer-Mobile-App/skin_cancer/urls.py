@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
+    path('account/', include('account.urls')),
     path('admin/', admin.site.urls),
     path('api/', include('skin_cancer_app.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
