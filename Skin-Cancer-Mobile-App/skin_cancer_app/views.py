@@ -1,8 +1,7 @@
 from django.http import HttpResponseBadRequest, JsonResponse
-from .models import SkinImage
+from .models import SkinImage, Account
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 import numpy as np
 import os
 import tensorflow as tf
@@ -17,19 +16,19 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def testSkinCancer(request):
-    return JsonResponse(request.user.username)
+
     # model = tf.keras.models.load_model(
     #     os.getcwd()+r'\media\skin_cancer_model2.keras', safe_mode=False)
 
     # if not request.FILES:
     #     return HttpResponseBadRequest(json.dumps({'error': 'No image uploaded'}))
 
-    # uploaded_image = request.FILES['image']
-    # username = request.POST['username']
-    # user = User.objects.get(username=username)
+    uploaded_image = request.FILES['image']
+    username = request.POST['username']
+    user = Account.objects.get(username=username)
 
-    # image_model = SkinImage.objects.create(user=user, image=uploaded_image)
-
+    image_model = SkinImage.objects.create(user=user, image=uploaded_image)
+    return JsonResponse(request.user.username, safe=False)
     # img_path = r'images\{0}'.format(uploaded_image)
 
     # img = tf.keras.image.load_img(
@@ -52,3 +51,28 @@ def testSkinCancer(request):
     # response_data = {"Classification Result": "result",
     #                  'Prediction': "None"}
     # return JsonResponse(response_data)
+
+
+@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def history(request):
+    results = SkinImage.objects.filter(user=request.user)
+    data = list(results.values())
+    return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def user_informations(request):
+    result = Account.objects.filter(pk=request.user.pk).first()
+    data = {
+        'username': result.username,
+        'email': result.email,
+        'date_joined': result.date_joined,
+        'last_login': result.last_login,
+    }
+    return JsonResponse(data, safe=False)
