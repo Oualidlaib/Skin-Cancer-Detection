@@ -9,6 +9,9 @@ mysqlclient = "*"
 pillow = "*"
 djangorestframework-simplejwt = "*"
 tensorflow = "*"
+dj-database-url = "*"
+psycopg2 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
