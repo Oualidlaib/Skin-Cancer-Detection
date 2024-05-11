@@ -60,6 +60,7 @@ def reset_password(request):
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         subject = 'Password Reset Request'
         reset_password_url = f'https://skin-cancer-detection-mobile-app.onrender.com/account/password-reset-confirm/{uidb64}/{password_reset_token}/'
+        print(reset_password_url)
         message = f'You requested a password reset for your account. Please click the link below to set a new password:\n{reset_password_url}'
         html_message = render(request, 'reset_password.html', {
             'username': user.username,
@@ -67,6 +68,7 @@ def reset_password(request):
         }).content.decode()
         send_mail(subject, '', 'laiboualid2003@gmail.com', [
                   user.email], html_message=html_message)
+        print("sent")
         return Response({'status': 'Success', 'message': 'Password reset link sent.'}, status=HTTP_202_ACCEPTED)
 
     return Response({'status': 'Error', 'message': 'Email not found.'})
