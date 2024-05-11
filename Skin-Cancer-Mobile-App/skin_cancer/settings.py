@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'skin_cancer.wsgi.application'
 # }
 
 DATABASES = {
-    "default": dj_database_url.parse("postgres://root:xgzM9N2QuDtQG7qmlLsY6DZXiNruJjOM@dpg-cova8r7jbltc73daq02g-a.frankfurt-postgres.render.com/skin_cancer_database")
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 # Password validation
