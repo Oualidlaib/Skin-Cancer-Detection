@@ -59,7 +59,7 @@ def reset_password(request):
         password_reset_token = token_generator.make_token(user)
         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         subject = 'Password Reset Request'
-        reset_password_url = f'http://127.0.0.1:8000/account/password-reset-confirm/{uidb64}/{password_reset_token}/'
+        reset_password_url = f'https://skin-cancer-detection-mobile-app.onrender.com/account/password-reset-confirm/{uidb64}/{password_reset_token}/'
         message = f'You requested a password reset for your account. Please click the link below to set a new password:\n{reset_password_url}'
         html_message = render(request, 'reset_password.html', {
             'username': user.username,
