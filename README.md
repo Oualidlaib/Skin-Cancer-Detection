@@ -1,1 +1,1 @@
-# Skin-Cancer-Detection-Mobile-App
+# Skin Cancer Detection Backend
