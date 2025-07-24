@@ -71,7 +71,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 ## Test it
-1. **Autheticate**
+1. **Authenticate**
 ```bash
 curl -X POST http://ip_address:port/api/token/ \
   -H "Content-Type: application/json" \
