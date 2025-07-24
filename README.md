@@ -9,8 +9,6 @@ A Django-based backend application that allows users to upload images of skin le
 - User authentication via JWT tokens.
 - Upload skin lesion images via the `/api/test/` endpoint.
 - Predicts cancer type using fine-tuned ResNet50 model.
----
-
 
 ---
 
