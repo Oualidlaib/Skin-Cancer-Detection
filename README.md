@@ -31,6 +31,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 4. **Configure environment varibles**
+```bash
 # .env
 SECRET_KEY=your_django_secret_key_here
 
@@ -45,7 +46,7 @@ DEFAULT_FROM_EMAIL=your_email@example.com
 
 # Django
 DEFAULT_AUTO_FIELD=django.db.models.BigAutoField
-
+```
 
 
 
