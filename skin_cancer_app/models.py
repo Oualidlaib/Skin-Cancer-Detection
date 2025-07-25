@@ -51,7 +51,7 @@ class Account(AbstractBaseUser):
 
 
 def user_directory_path(instance, filename):
-    return r'images\{0}'.format(filename)
+    return 'images/{0}'.format(filename)
 
 
 class SkinImage(models.Model):

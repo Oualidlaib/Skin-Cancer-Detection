@@ -5,10 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 import numpy as np
 import os
 import tensorflow as tf
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.conf import settings
 
 
 @csrf_exempt
@@ -16,41 +16,42 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def testSkinCancer(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest(json.dumps({'error': 'Only POST requests are allowed'}))
 
-    # model = tf.keras.models.load_model(
-    #     os.getcwd()+r'\media\skin_cancer_model2.keras', safe_mode=False)
-
-    # if not request.FILES:
-    #     return HttpResponseBadRequest(json.dumps({'error': 'No image uploaded'}))
+    if 'image' not in request.FILES or 'username' not in request.POST:
+        return HttpResponseBadRequest(json.dumps({'error': 'Image and username required'}))
 
     uploaded_image = request.FILES['image']
     username = request.POST['username']
-    user = Account.objects.get(username=username)
+
+    try:
+        user = Account.objects.get(username=username)
+    except Account.DoesNotExist:
+        return HttpResponseBadRequest(json.dumps({'error': 'User not found'}))
 
     image_model = SkinImage.objects.create(user=user, image=uploaded_image)
-    return JsonResponse(request.user.username, safe=False)
-    # img_path = r'images\{0}'.format(uploaded_image)
 
-    # img = tf.keras.image.load_img(
-    #     r'media\{0}'.format(img_path), target_size=(160, 160))
+    model_path = os.path.join(settings.BASE_DIR, 'media', 'skin-cancer-predictor.keras')
+    model = tf.keras.models.load_model(model_path, safe_mode=False)
 
-    # img_array = tf.keras.image.img_to_array(img)
-    # img_array_expanded_dims = np.expand_dims(img_array, axis=0)
-    # preprocessed_image = tf.keras.applications.mobilenet.preprocess_input(
-    #     img_array_expanded_dims
-    # )
-    # predictions = model.predict(preprocessed_image)
-    # predictions = predictions.tolist()
-    # pre = predictions[0][0]-0.1
+    image_path = image_model.image.path
+    img = tf.keras.utils.load_img(image_path, target_size=(224, 224))  
+    img_array = tf.keras.utils.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    preprocessed_img = tf.keras.applications.resnet50.preprocess_input(img_array)
 
-    # result = ""
-    # if pre > 0.5:
-    #     result = "Malignant"
-    # else:
-    #     result = "Benign"
-    # response_data = {"Classification Result": "result",
-    #                  'Prediction': "None"}
-    # return JsonResponse(response_data)
+    predictions = model.predict(preprocessed_img)
+    predicted_value = predictions[0][0]  
+    result = "Malignant" if predicted_value > 0.5 else "Benign"
+
+    response_data = {
+        "username": username,
+        "classification": result,
+        "prediction_score": float(predicted_value)
+    }
+
+    return JsonResponse(response_data)
 
 
 @csrf_exempt
