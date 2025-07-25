@@ -16,8 +16,8 @@ A Django-based backend application that allows users to upload images of skin le
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/skin-cancer-backend.git
-cd skin-cancer-backend
+git clone https://github.com/yourusername/Skin-Cancer-Detection.git
+cd Skin-Cancer-Detection
 ```
 2. **Create a virtual enviroment**
 ```bash
