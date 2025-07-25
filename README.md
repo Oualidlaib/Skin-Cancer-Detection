@@ -73,13 +73,13 @@ python manage.py runserver
 ## Test it
 1. **Authenticate**
 ```bash
-curl -X POST http://ip_address:port/api/token/ \
+curl -X POST http://127.0.0.1:8000/api/token/ \
   -H "Content-Type: application/json" \
   -d '{"email": "user@example.com", "password": "yourpassword"}'
 ```
 2. **Upload & Predict**:
 ```bash
-curl -X POST http://ip_address:port/api/test/ \
+curl -X POST http://127.0.0.1:8000/api/test/ \
   -H "Authorization: Bearer <your_token>" \
   -F "image=@/path/to/lesion.jpg"
 ```
