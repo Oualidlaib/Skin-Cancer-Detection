@@ -1,6 +1,6 @@
 # Skin Cancer Detection Backend
 
-A Django-based backend application that allows users to upload images of skin lesions and get predictions indicating whether the lesion is **Benign** or **Malignant** using a pre-trained **ResNet50** deep learning model.
+A Django-based backend application that allows users to upload images of skin lesions and get predictions indicating whether the lesion is **Benign** or **Malignant** using a pre-trained **ResNet101v2** deep learning model.
 
 ---
 
