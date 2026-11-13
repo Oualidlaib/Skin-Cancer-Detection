@@ -2,6 +2,10 @@
 
 A Django-based backend application that allows users to upload images of skin lesions and get predictions indicating whether the lesion is **Benign** or **Malignant** using a pre-trained **ResNet101v2** deep learning model.
 
+The model can be found in "https://drive.google.com/file/d/1EpTJZIXcpxlfqxUWLllP2zMpyj9oBsSB/view?usp=sharing"
+
+Just make sure to create a `media` folder with the model `skin-cancer-predictor.keras` placed inside.
+
 ---
 
 ## Features
