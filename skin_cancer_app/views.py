@@ -10,6 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.conf import settings
 
+MODEL_PATH = os.path.join(settings.BASE_DIR, 'media', 'skin-cancer-predictor.keras')
+model = tf.keras.models.load_model(MODEL_PATH, safe_mode=False)
 
 @csrf_exempt
 @api_view(['POST'])
@@ -32,14 +34,11 @@ def testSkinCancer(request):
 
     image_model = SkinImage.objects.create(user=user, image=uploaded_image)
 
-    model_path = os.path.join(settings.BASE_DIR, 'media', 'skin-cancer-predictor.keras')
-    model = tf.keras.models.load_model(model_path, safe_mode=False)
-
     image_path = image_model.image.path
-    img = tf.keras.utils.load_img(image_path, target_size=(224, 224))  
+    img = tf.keras.utils.load_img(image_path, target_size=(299, 299))  
     img_array = tf.keras.utils.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
-    preprocessed_img = tf.keras.applications.resnet50.preprocess_input(img_array)
+    preprocessed_img = tf.keras.applications.resnet_v2.preprocess_input(img_array)
 
     predictions = model.predict(preprocessed_img)
     predicted_value = predictions[0][0]  
