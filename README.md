@@ -53,11 +53,8 @@ DEFAULT_FROM_EMAIL=your_email@example.com
 # Django
 DEFAULT_AUTO_FIELD=django.db.models.BigAutoField
 ```
-5. **Install dependecies**
-```bash
-pip install -r requirements.txt
-```
-6. **Set up the database**
+
+5. **Set up the database**
 ```bash
 python manage.py makemigrations
 python manage.py migrate

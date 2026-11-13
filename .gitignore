@@ -1,2 +1,5 @@
 .env
 .venv/
+media/uploads/   
+__pycache__/
+media/skin-cancer-predictor.keras
